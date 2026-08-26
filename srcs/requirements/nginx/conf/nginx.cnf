@@ -1,0 +1,28 @@
+server {
+    listen 443 ssl;
+    listen [::]:443 ssl;
+
+    server_name akira.42.fr;
+
+    # Les chemins dial SSL certificates li générainat f Dockerfile
+    ssl_certificate /etc/nginx/ssl/inception.crt;
+    ssl_certificate_key /etc/nginx/ssl/inception.key;
+
+    # Protocoles d'amane (TLSv1.3 kima m-tlob f subject)
+    ssl_protocols TLSv1.2 TLSv1.3;
+
+    root /var/www/html;
+    index index.php index.html index.htm;
+
+    location / {
+        try_files $uri $uri/ /index.php?$args;
+    }
+
+    # Location khassa b PHP-FPM bach y-executi les scripts .php w ysifthoum l container wordpress
+    location ~ \.php$ {
+        include snippets/fastcgi-php.conf;
+        fastcgi_pass wordpress:9000; # <--- Hna fin NGINX kat-connecta m3a WordPress container!
+        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+        include fastcgi_params;
+    }
+}
