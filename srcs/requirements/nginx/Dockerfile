@@ -12,7 +12,7 @@ RUN mkdir -p /etc/nginx/ssl
 RUN openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
     -keyout /etc/nginx/ssl/inception.key \
     -out /etc/nginx/ssl/inception.crt \
-    -subj "/C=MA/ST=Rabat/L=Salé/O=42/OU=42Salé/CN=akira.42.fr"
+    -subj "/C=MA/ST=Rabat/L=Salé/O=42/OU=42Salé/CN=adzahrao.42.fr"
 
 # 4. Copier l'fichier de configuration dial NGINX lli ghadi n-criywiw
 COPY conf/nginx.conf /etc/nginx/conf.d/default.conf

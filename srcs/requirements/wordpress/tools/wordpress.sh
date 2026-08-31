@@ -1,16 +1,22 @@
 #!/bin/bash
+set -e
 
-sleep 5
 mkdir -p /var/www/html
 cd /var/www/html
-rm -rf *
-wp core download --allow-root
 
-wp config create --allow-root \
-    --dbname="$MYSQL_DATABASE" \
-    --dbuser="$MYSQL_USER" \
-    --dbpass="$MYSQL_PASSWORD" \
-    --dbhost="mariadb:3306"
+if [ ! -f wp-load.php ]; then
+    wp core download --allow-root
+fi
+
+if [ ! -f wp-config.php ]; then
+    until wp config create --allow-root \
+        --dbname="$MYSQL_DATABASE" \
+        --dbuser="$MYSQL_USER" \
+        --dbpass="$MYSQL_PASSWORD" \
+        --dbhost="mariadb:3306"; do
+        sleep 2
+    done
+fi
 
 wp core install --allow-root \
     --url="$DOMAIN_NAME" \
