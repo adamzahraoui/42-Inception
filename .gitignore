@@ -1,0 +1,9 @@
+# Local credentials
+# secrets/*
+
+# Docker and editor artifacts
+# *.log
+# .vscode/
+
+# Local copy of the subject
+# en.subject.pdf

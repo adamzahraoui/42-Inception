@@ -1,6 +1,8 @@
 services:
   nginx:
+    image: nginx
     build: ./requirements/nginx
+    restart: on-failure
     ports:
       - "443:443"
     networks:
@@ -9,20 +11,30 @@ services:
       - "wordpress_data:/var/www/html"
     depends_on:
       - wordpress
+      - mariadb
 
   mariadb:
+    image: mariadb
     build: ./requirements/mariadb
-    restart: always
+    restart: on-failure
     env_file: .env
+    secrets:
+      - db_password
+      - db_root_password
     networks:
       - inception
     volumes:
       - "mariadb_data:/var/lib/mysql"
   
   wordpress:
+    image: wordpress
     build: ./requirements/wordpress
-    restart: always
+    restart: on-failure
     env_file: .env
+    secrets:
+      - db_password
+      - wp_admin_password
+      - wp_user_password
     networks:
       - inception
     volumes:
@@ -47,3 +59,13 @@ volumes:
       type: none
       o: bind
       device: /home/adzahrao/data/wordpress
+
+secrets:
+  db_password:
+    file: ../secrets/ps_database.txt
+  db_root_password:
+    file: ../secrets/pw_root_db.txt
+  wp_admin_password:
+    file: ../secrets/pw_admin.txt
+  wp_user_password:
+    file: ../secrets/pw_user.txt
